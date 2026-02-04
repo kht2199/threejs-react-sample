@@ -1,6 +1,7 @@
-import { useState, Suspense } from 'react'
+import { useState, useEffect, Suspense, useMemo } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
+import * as THREE from 'three'
 import Example1 from './examples/Example1'
 import Example2 from './examples/Example2'
 import Example3 from './examples/Example3'
@@ -41,7 +42,50 @@ const examples = [
 
 function App() {
   const [currentExample, setCurrentExample] = useState(0)
+  const [renderer, setRenderer] = useState('webgl')
+  const [webgpuSupported, setWebgpuSupported] = useState(false)
   const CurrentComponent = examples[currentExample].component
+
+  // WebGPU 지원 체크
+  useEffect(() => {
+    const checkWebGPU = async () => {
+      if ('gpu' in navigator) {
+        try {
+          const adapter = await navigator.gpu.requestAdapter()
+          setWebgpuSupported(!!adapter)
+        } catch (e) {
+          setWebgpuSupported(false)
+        }
+      } else {
+        setWebgpuSupported(false)
+      }
+    }
+    checkWebGPU()
+  }, [])
+
+  // Canvas props 설정 (v9 방식)
+  const canvasProps = useMemo(() => {
+    const baseProps = {
+      camera: { position: [0, 0, 8] }
+    }
+
+    if (renderer === 'webgpu') {
+      return {
+        ...baseProps,
+        gl: async (props) => {  // ✅ v9: canvas가 아니라 props 사용
+          const { WebGPURenderer } = await import('three/webgpu')
+          const webgpuRenderer = new WebGPURenderer(props)
+          await webgpuRenderer.init()
+          return webgpuRenderer
+        }
+      }
+    }
+
+    return {
+      ...baseProps,
+      gl: { antialias: true }
+    }
+  }, [renderer])
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
@@ -57,6 +101,52 @@ function App() {
         alignItems: 'center',
         maxWidth: '90%'
       }}>
+        {/* Renderer selector */}
+        <div style={{
+          display: 'flex',
+          gap: '8px',
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          padding: '10px',
+          borderRadius: '8px'
+        }}>
+          <span style={{ color: 'white', fontSize: '14px', lineHeight: '32px' }}>
+            렌더러:
+          </span>
+          <button
+            onClick={() => setRenderer('webgl')}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: renderer === 'webgl' ? '#3498db' : '#34495e',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              fontSize: '12px',
+              fontWeight: renderer === 'webgl' ? 'bold' : 'normal'
+            }}
+          >
+            WebGL
+          </button>
+          <button
+            onClick={() => setRenderer('webgpu')}
+            disabled={!webgpuSupported}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: renderer === 'webgpu' ? '#9b59b6' : '#34495e',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: webgpuSupported ? 'pointer' : 'not-allowed',
+              fontSize: '12px',
+              fontWeight: renderer === 'webgpu' ? 'bold' : 'normal',
+              opacity: webgpuSupported ? 1 : 0.5
+            }}
+            title={!webgpuSupported ? 'WebGPU is not supported in your browser' : ''}
+          >
+            WebGPU {!webgpuSupported && '(미지원)'}
+          </button>
+        </div>
+
         {/* Example selector */}
         <div style={{
           display: 'flex',
@@ -86,7 +176,7 @@ function App() {
         </div>
       </div>
 
-      <Canvas camera={{ position: [0, 0, 8] }} gl={{ antialias: true }}>
+      <Canvas key={renderer} {...canvasProps}>
         <Suspense fallback={<Loader />}>
           <CurrentComponent />
         </Suspense>

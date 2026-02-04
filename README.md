@@ -109,9 +109,38 @@ pnpm build
 
 - 8가지 다른 Three.js 예제
 - 예제 간 실시간 전환
-- **WebGL 렌더러** 사용
+- **렌더러 선택**: WebGL / WebGPU (React Three Fiber v9 지원)
+- WebGPU 지원 여부 자동 감지
 - 다양한 OrbitControls 설정 (전방향, 단방향 회전)
 - 인터랙티브 요소 (호버, 클릭, 반투명 효과, Alert 이벤트)
 - Canvas API를 사용한 프로그래매틱 텍스처 생성
 - 멀티 텍스처 매핑 (큐브 6면)
 - 반응형 디자인
+
+## 렌더러 정보
+
+### WebGL (기본)
+- 모든 브라우저에서 지원
+- 안정적이고 호환성이 높음
+- Canvas API 텍스처 완벽 지원
+
+### WebGPU (v9 지원)
+- React Three Fiber v9에서 공식 지원
+- 최신 브라우저에서만 지원 (Chrome 113+, Edge 113+)
+- 더 나은 성능과 현대적인 그래픽 API
+- 비동기 렌더러 초기화 지원
+
+**WebGPU를 사용하려면**:
+- Chrome 또는 Edge 113 이상 버전 필요
+- `chrome://flags`에서 "Unsafe WebGPU" 활성화 (필요시)
+- 브라우저가 WebGPU를 지원하지 않으면 버튼이 비활성화됨
+
+### React Three Fiber v9 기능
+```javascript
+// WebGPU 비동기 렌더러 초기화
+gl={async (props) => {
+  const renderer = new THREE.WebGPURenderer(props)
+  await renderer.init()
+  return renderer
+}}
+```
