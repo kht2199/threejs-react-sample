@@ -1,4 +1,4 @@
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, Suspense, useMemo } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { WebGLRenderer } from 'three'
 import { Html } from '@react-three/drei'
@@ -69,9 +69,13 @@ function App() {
   useEffect(() => {
     // Clear fallback message when renderer changes
     setFallbackMessage(null)
+    // Set actual renderer for WebGL mode
+    if (renderer === 'webgl') {
+      setActualRenderer('webgl')
+    }
   }, [renderer])
 
-  const getCanvasProps = () => {
+  const canvasProps = useMemo(() => {
     const baseProps = {
       camera: { position: [0, 0, 8] }
     }
@@ -102,12 +106,11 @@ function App() {
       }
     }
 
-    setActualRenderer('webgl')
     return {
       ...baseProps,
       gl: { antialias: true }
     }
-  }
+  }, [renderer])
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
@@ -252,7 +255,7 @@ function App() {
         </div>
       </div>
 
-      <Canvas key={renderer} {...getCanvasProps()}>
+      <Canvas key={renderer} {...canvasProps}>
         <Suspense fallback={<Loader />}>
           <CurrentComponent />
         </Suspense>
