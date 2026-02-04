@@ -46,13 +46,20 @@ pnpm build
 - 상태에 따른 색상 변경
 - GridHelper를 사용한 바닥 격자
 
+### 5. 수평 회전만 가능
+- **수평(좌우) 회전만 가능한 OrbitControls**
+- 수직(상하) 회전 제한 (고정된 높이에서만 관찰)
+- 상하로 떠다니는 여러 3D 오브젝트
+- TorusKnot, Box, Cone, Torus 등 다양한 geometry
+- 메탈릭 재질과 멀티 라이팅
+
 ## 기능
 
-- 4가지 다른 Three.js 예제
+- 5가지 다른 Three.js 예제
 - 예제 간 실시간 전환
 - **렌더러 선택**: WebGL / WebGPU
 - WebGPU 지원 여부 자동 감지
-- 마우스로 조작 가능한 OrbitControls
+- 다양한 OrbitControls 설정 (전방향, 단방향 회전)
 - 반응형 디자인
 
 ## 렌더러 정보
