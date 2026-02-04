@@ -133,6 +133,67 @@ function Building({ position, height, textures, label }) {
   )
 }
 
+// 이미지를 사용하는 건물 컴포넌트
+function ImageBuilding({ position, height, label, imageUrls }) {
+  const meshRef = useRef()
+  const [hovered, setHovered] = useState(false)
+
+  // 이미지 텍스처 로드
+  const textures = useLoader(TextureLoader, imageUrls)
+
+  useFrame((state) => {
+    if (hovered && meshRef.current) {
+      meshRef.current.position.y = height / 2 + Math.sin(state.clock.elapsedTime * 2) * 0.1
+    } else if (meshRef.current) {
+      meshRef.current.position.y = height / 2
+    }
+  })
+
+  return (
+    <group position={position}>
+      <mesh
+        ref={meshRef}
+        onPointerOver={() => {
+          setHovered(true)
+          document.body.style.cursor = 'pointer'
+        }}
+        onPointerOut={() => {
+          setHovered(false)
+          document.body.style.cursor = 'auto'
+        }}
+        onClick={() => {
+          alert(`🖼️ ${label}\n높이: ${height}m\n위치: (${position[0]}, ${position[2]})\n\n이 건물은 실제 이미지를 사용합니다!`)
+        }}
+        castShadow
+      >
+        <boxGeometry args={[1, height, 1]} />
+        {textures.map((texture, index) => (
+          <meshStandardMaterial
+            key={index}
+            attach={`material-${index}`}
+            map={texture}
+            metalness={0.2}
+            roughness={0.7}
+          />
+        ))}
+      </mesh>
+
+      {/* 건물 라벨 */}
+      {hovered && (
+        <Text
+          position={[0, height + 0.5, 0]}
+          fontSize={0.3}
+          color="#FFD700"
+          anchorX="center"
+          anchorY="middle"
+        >
+          {label} 🖼️
+        </Text>
+      )}
+    </group>
+  )
+}
+
 function CityMap() {
   // 지도 텍스처 생성
   const groundTexture = useMemo(() => {
@@ -307,6 +368,21 @@ export default function Example8() {
           label={building.label}
         />
       ))}
+
+      {/* 이미지를 사용하는 특별한 건물 */}
+      <ImageBuilding
+        position={[-2, 0, -2]}
+        height={3.8}
+        label="갤러리"
+        imageUrls={[
+          'https://picsum.photos/seed/right/512/512',
+          'https://picsum.photos/seed/left/512/512',
+          'https://picsum.photos/seed/top/512/512',
+          'https://picsum.photos/seed/bottom/512/512',
+          'https://picsum.photos/seed/front/512/512',
+          'https://picsum.photos/seed/back/512/512'
+        ]}
+      />
 
       <OrbitControls
         maxPolarAngle={Math.PI / 2.5}
