@@ -50,5 +50,22 @@ pnpm build
 
 - 4가지 다른 Three.js 예제
 - 예제 간 실시간 전환
+- **렌더러 선택**: WebGL / WebGPU
+- WebGPU 지원 여부 자동 감지
 - 마우스로 조작 가능한 OrbitControls
 - 반응형 디자인
+
+## 렌더러 정보
+
+### WebGL (기본)
+- 모든 브라우저에서 지원
+- 안정적이고 호환성이 높음
+
+### WebGPU (실험적)
+- 최신 브라우저에서만 지원 (Chrome 113+, Edge 113+)
+- 더 나은 성능과 현대적인 그래픽 API
+- 지원하지 않는 브라우저에서는 자동으로 WebGL로 폴백
+
+**WebGPU를 사용하려면**:
+- Chrome 또는 Edge 113 이상 버전 필요
+- `chrome://flags`에서 "Unsafe WebGPU" 활성화 (필요시)
