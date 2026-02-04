@@ -6,8 +6,10 @@ function RotatingCube() {
   const meshRef = useRef()
 
   useFrame((state, delta) => {
-    meshRef.current.rotation.x += delta
-    meshRef.current.rotation.y += delta * 0.5
+    if (meshRef.current) {
+      meshRef.current.rotation.x += delta
+      meshRef.current.rotation.y += delta * 0.5
+    }
   })
 
   return (
@@ -22,8 +24,10 @@ function RotatingTorus() {
   const meshRef = useRef()
 
   useFrame((state, delta) => {
-    meshRef.current.rotation.x += delta * 0.3
-    meshRef.current.rotation.z += delta * 0.2
+    if (meshRef.current) {
+      meshRef.current.rotation.x += delta * 0.3
+      meshRef.current.rotation.z += delta * 0.2
+    }
   })
 
   return (

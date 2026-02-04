@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { OrbitControls, Sphere, Box, Torus, Octahedron } from '@react-three/drei'
+import { OrbitControls } from '@react-three/drei'
 
 function NestedObject({ outerGeometry, innerGeometry, position, outerColor, innerColor, label }) {
   const outerRef = useRef()

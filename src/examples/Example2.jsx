@@ -6,7 +6,9 @@ function AnimatedSphere({ position, color }) {
   const meshRef = useRef()
 
   useFrame((state) => {
-    meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime) * 0.5
+    if (meshRef.current) {
+      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime) * 0.5
+    }
   })
 
   return (

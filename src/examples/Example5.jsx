@@ -1,13 +1,15 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { OrbitControls, Torus, Box, Cone } from '@react-three/drei'
+import { OrbitControls } from '@react-three/drei'
 
 function FloatingObject({ geometry, position, color }) {
   const meshRef = useRef()
 
   useFrame((state) => {
-    meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime + position[0]) * 0.3
-    meshRef.current.rotation.z += 0.01
+    if (meshRef.current) {
+      meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime + position[0]) * 0.3
+      meshRef.current.rotation.z += 0.01
+    }
   })
 
   return (

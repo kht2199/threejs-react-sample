@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { WebGLRenderer } from 'three'
+import { Html } from '@react-three/drei'
 import Example1 from './examples/Example1'
 import Example2 from './examples/Example2'
 import Example3 from './examples/Example3'
@@ -10,6 +11,23 @@ import Example6 from './examples/Example6'
 import Example7 from './examples/Example7'
 import Example8 from './examples/Example8'
 import './App.css'
+
+// 로딩 컴포넌트
+function Loader() {
+  return (
+    <Html center>
+      <div style={{
+        color: 'white',
+        fontSize: '20px',
+        background: 'rgba(0, 0, 0, 0.8)',
+        padding: '20px',
+        borderRadius: '10px'
+      }}>
+        ⏳ 로딩 중...
+      </div>
+    </Html>
+  )
+}
 
 const examples = [
   { id: 1, name: '회전하는 큐브 & 토러스', component: Example1 },
@@ -235,7 +253,9 @@ function App() {
       </div>
 
       <Canvas key={renderer} {...getCanvasProps()}>
-        <CurrentComponent />
+        <Suspense fallback={<Loader />}>
+          <CurrentComponent />
+        </Suspense>
       </Canvas>
     </div>
   )

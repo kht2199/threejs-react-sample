@@ -6,8 +6,10 @@ function Cylinder({ position, color, speed }) {
   const meshRef = useRef()
 
   useFrame((state, delta) => {
-    meshRef.current.rotation.y += delta * speed
-    meshRef.current.position.y = Math.sin(state.clock.elapsedTime * speed) * 0.5
+    if (meshRef.current) {
+      meshRef.current.rotation.y += delta * speed
+      meshRef.current.position.y = Math.sin(state.clock.elapsedTime * speed) * 0.5
+    }
   })
 
   return (

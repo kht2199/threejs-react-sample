@@ -1,7 +1,7 @@
-import { useRef, useMemo, useState } from 'react'
+import { useRef, useMemo, useState, useEffect } from 'react'
 import { useFrame, useLoader } from '@react-three/fiber'
 import { OrbitControls, Text } from '@react-three/drei'
-import { TextureLoader, CanvasTexture, RepeatWrapping } from 'three'
+import { TextureLoader, CanvasTexture, RepeatWrapping, MeshStandardMaterial } from 'three'
 
 // Canvas로 텍스처 생성하는 함수
 function createTexture(color, text, pattern = 'windows') {
@@ -80,11 +80,34 @@ function Building({ position, height, textures, label }) {
   const meshRef = useRef()
   const [hovered, setHovered] = useState(false)
 
+  // Material 배열 생성
+  const materials = useMemo(() =>
+    textures.map(texture =>
+      new MeshStandardMaterial({
+        map: texture,
+        metalness: 0.1,
+        roughness: 0.8
+      })
+    ), [textures]
+  )
+
+  // Cleanup: 텍스처와 material dispose
+  useEffect(() => {
+    return () => {
+      materials.forEach(material => {
+        if (material.map) material.map.dispose()
+        material.dispose()
+      })
+    }
+  }, [materials])
+
   useFrame((state) => {
-    if (hovered && meshRef.current) {
-      meshRef.current.position.y = height / 2 + Math.sin(state.clock.elapsedTime * 2) * 0.1
-    } else if (meshRef.current) {
-      meshRef.current.position.y = height / 2
+    if (meshRef.current) {
+      if (hovered) {
+        meshRef.current.position.y = height / 2 + Math.sin(state.clock.elapsedTime * 2) * 0.1
+      } else {
+        meshRef.current.position.y = height / 2
+      }
     }
   })
 
@@ -92,6 +115,7 @@ function Building({ position, height, textures, label }) {
     <group position={position}>
       <mesh
         ref={meshRef}
+        material={materials}
         onPointerOver={() => {
           setHovered(true)
           document.body.style.cursor = 'pointer'
@@ -106,15 +130,6 @@ function Building({ position, height, textures, label }) {
         castShadow
       >
         <boxGeometry args={[1, height, 1]} />
-        {textures.map((texture, index) => (
-          <meshStandardMaterial
-            key={index}
-            attach={`material-${index}`}
-            map={texture}
-            metalness={0.1}
-            roughness={0.8}
-          />
-        ))}
       </mesh>
 
       {/* 건물 라벨 */}
@@ -141,11 +156,31 @@ function ImageBuilding({ position, height, label, imageUrls }) {
   // 이미지 텍스처 로드
   const textures = useLoader(TextureLoader, imageUrls)
 
+  // Material 배열 생성
+  const materials = useMemo(() =>
+    textures.map(texture =>
+      new MeshStandardMaterial({
+        map: texture,
+        metalness: 0.2,
+        roughness: 0.7
+      })
+    ), [textures]
+  )
+
+  // Cleanup: material dispose (텍스처는 useLoader가 관리)
+  useEffect(() => {
+    return () => {
+      materials.forEach(material => material.dispose())
+    }
+  }, [materials])
+
   useFrame((state) => {
-    if (hovered && meshRef.current) {
-      meshRef.current.position.y = height / 2 + Math.sin(state.clock.elapsedTime * 2) * 0.1
-    } else if (meshRef.current) {
-      meshRef.current.position.y = height / 2
+    if (meshRef.current) {
+      if (hovered) {
+        meshRef.current.position.y = height / 2 + Math.sin(state.clock.elapsedTime * 2) * 0.1
+      } else {
+        meshRef.current.position.y = height / 2
+      }
     }
   })
 
@@ -153,6 +188,7 @@ function ImageBuilding({ position, height, label, imageUrls }) {
     <group position={position}>
       <mesh
         ref={meshRef}
+        material={materials}
         onPointerOver={() => {
           setHovered(true)
           document.body.style.cursor = 'pointer'
@@ -167,15 +203,6 @@ function ImageBuilding({ position, height, label, imageUrls }) {
         castShadow
       >
         <boxGeometry args={[1, height, 1]} />
-        {textures.map((texture, index) => (
-          <meshStandardMaterial
-            key={index}
-            attach={`material-${index}`}
-            map={texture}
-            metalness={0.2}
-            roughness={0.7}
-          />
-        ))}
       </mesh>
 
       {/* 건물 라벨 */}

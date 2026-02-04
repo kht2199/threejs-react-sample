@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { OrbitControls, Text3D, Center } from '@react-three/drei'
-import { MeshStandardMaterial } from 'three'
+import { OrbitControls } from '@react-three/drei'
 
 function ClickableObject({ geometry, position, color, name, info }) {
   const meshRef = useRef()

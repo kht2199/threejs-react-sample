@@ -8,7 +8,7 @@ function InteractiveCube({ position }) {
   const [clicked, setClicked] = useState(false)
 
   useFrame((state, delta) => {
-    if (clicked) {
+    if (clicked && meshRef.current) {
       meshRef.current.rotation.x += delta * 2
       meshRef.current.rotation.y += delta * 2
     }
