@@ -1,7 +1,7 @@
 import { useRef, useMemo, useState, useEffect } from 'react'
 import { useFrame, useLoader } from '@react-three/fiber'
 import { OrbitControls, Text } from '@react-three/drei'
-import { TextureLoader, CanvasTexture, RepeatWrapping, MeshStandardMaterial } from 'three'
+import { TextureLoader, CanvasTexture, RepeatWrapping, MeshStandardMaterial, SRGBColorSpace } from 'three'
 
 // Canvas로 텍스처 생성하는 함수
 function createTexture(color, text, pattern = 'windows') {
@@ -73,7 +73,11 @@ function createTexture(color, text, pattern = 'windows') {
     ctx.fillText(text, 256, 50)
   }
 
-  return new CanvasTexture(canvas)
+  const texture = new CanvasTexture(canvas)
+  // WebGPU 호환성 설정
+  texture.colorSpace = SRGBColorSpace
+  texture.needsUpdate = true
+  return texture
 }
 
 function Building({ position, height, textures, label }) {
@@ -271,6 +275,9 @@ function CityMap() {
     const texture = new CanvasTexture(canvas)
     texture.wrapS = RepeatWrapping
     texture.wrapT = RepeatWrapping
+    // WebGPU 호환성 설정
+    texture.colorSpace = SRGBColorSpace
+    texture.needsUpdate = true
     return texture
   }, [])
 
