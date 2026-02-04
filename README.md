@@ -69,3 +69,10 @@ pnpm build
 **WebGPU를 사용하려면**:
 - Chrome 또는 Edge 113 이상 버전 필요
 - `chrome://flags`에서 "Unsafe WebGPU" 활성화 (필요시)
+
+### Fallback 기능
+- **자동 감지**: WebGPU 지원 여부 자동 체크
+- **로딩 상태**: 렌더러 전환 중 로딩 표시
+- **실시간 상태**: 현재 사용 중인 렌더러 표시
+- **에러 알림**: WebGPU 실패 시 알림 메시지와 함께 WebGL로 자동 전환
+- **안전한 폴백**: 언제나 WebGL로 안전하게 돌아갈 수 있음
