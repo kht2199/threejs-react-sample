@@ -75,6 +75,16 @@ function App() {
     }
   }, [renderer])
 
+  useEffect(() => {
+    // Example 8 (3D 도시 지도)에서 WebGPU 사용 시 자동으로 WebGL로 전환
+    // WebGPU는 CanvasTexture를 완전히 지원하지 않음
+    if (currentExample === 7 && renderer === 'webgpu') {
+      setRenderer('webgl')
+      setFallbackMessage('Example 8은 WebGL 모드에서만 지원됩니다. 자동으로 전환되었습니다.')
+      setTimeout(() => setFallbackMessage(null), 5000)
+    }
+  }, [currentExample, renderer])
+
   const canvasProps = useMemo(() => {
     const baseProps = {
       camera: { position: [0, 0, 8] }

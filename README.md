@@ -132,6 +132,10 @@ pnpm build
 - Chrome 또는 Edge 113 이상 버전 필요
 - `chrome://flags`에서 "Unsafe WebGPU" 활성화 (필요시)
 
+**WebGPU 제한사항**:
+- **Example 8 (3D 도시 지도)**: CanvasTexture 호환성 문제로 WebGL 모드에서만 지원
+- Example 8 선택 시 자동으로 WebGL로 전환됨
+
 ### Fallback 기능
 - **자동 감지**: WebGPU 지원 여부 자동 체크
 - **로딩 상태**: 렌더러 전환 중 로딩 표시
