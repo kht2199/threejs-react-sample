@@ -7,6 +7,7 @@ import Example3 from './examples/Example3'
 import Example4 from './examples/Example4'
 import Example5 from './examples/Example5'
 import Example6 from './examples/Example6'
+import Example7 from './examples/Example7'
 import './App.css'
 
 const examples = [
@@ -15,7 +16,8 @@ const examples = [
   { id: 3, name: '회전하는 실린더들', component: Example3 },
   { id: 4, name: '인터랙티브 큐브', component: Example4 },
   { id: 5, name: '수평 회전만 가능', component: Example5 },
-  { id: 6, name: '중첩 오브젝트 (반투명)', component: Example6 }
+  { id: 6, name: '중첩 오브젝트 (반투명)', component: Example6 },
+  { id: 7, name: '클릭 이벤트 & Alert', component: Example7 }
 ]
 
 function App() {
