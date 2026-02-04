@@ -53,13 +53,25 @@ pnpm build
 - TorusKnot, Box, Cone, Torus 등 다양한 geometry
 - 메탈릭 재질과 멀티 라이팅
 
+### 6. 중첩 오브젝트 (반투명)
+- **오브젝트 안에 오브젝트가 있는 중첩 구조**
+- 마우스 호버 시 외부 오브젝트가 반투명해짐 (opacity: 0.9 → 0.3)
+- 호버 시 내부 오브젝트가 빛남 (emissive 효과 증가)
+- 4가지 조합:
+  - Sphere 안에 Cube
+  - Box 안에 Torus
+  - Torus 안에 Octahedron
+  - Octahedron 안에 Sphere
+- 외부/내부 오브젝트가 서로 반대 방향으로 회전
+
 ## 기능
 
-- 5가지 다른 Three.js 예제
+- 6가지 다른 Three.js 예제
 - 예제 간 실시간 전환
 - **렌더러 선택**: WebGL / WebGPU
 - WebGPU 지원 여부 자동 감지
 - 다양한 OrbitControls 설정 (전방향, 단방향 회전)
+- 인터랙티브 요소 (호버, 클릭, 반투명 효과)
 - 반응형 디자인
 
 ## 렌더러 정보
