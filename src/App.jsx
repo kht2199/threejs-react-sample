@@ -1,50 +1,59 @@
-import { useRef } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, Stars } from '@react-three/drei'
+import { useState } from 'react'
+import { Canvas } from '@react-three/fiber'
+import Example1 from './examples/Example1'
+import Example2 from './examples/Example2'
+import Example3 from './examples/Example3'
+import Example4 from './examples/Example4'
 import './App.css'
 
-function RotatingCube() {
-  const meshRef = useRef()
-
-  useFrame((state, delta) => {
-    meshRef.current.rotation.x += delta
-    meshRef.current.rotation.y += delta * 0.5
-  })
-
-  return (
-    <mesh ref={meshRef}>
-      <boxGeometry args={[2, 2, 2]} />
-      <meshStandardMaterial color="royalblue" />
-    </mesh>
-  )
-}
-
-function RotatingTorus() {
-  const meshRef = useRef()
-
-  useFrame((state, delta) => {
-    meshRef.current.rotation.x += delta * 0.3
-    meshRef.current.rotation.z += delta * 0.2
-  })
-
-  return (
-    <mesh ref={meshRef} position={[3, 0, 0]}>
-      <torusGeometry args={[1, 0.4, 16, 100]} />
-      <meshStandardMaterial color="hotpink" />
-    </mesh>
-  )
-}
+const examples = [
+  { id: 1, name: '회전하는 큐브 & 토러스', component: Example1 },
+  { id: 2, name: '애니메이션 구체', component: Example2 },
+  { id: 3, name: '회전하는 실린더들', component: Example3 },
+  { id: 4, name: '인터랙티브 큐브', component: Example4 }
+]
 
 function App() {
+  const [currentExample, setCurrentExample] = useState(0)
+  const CurrentComponent = examples[currentExample].component
+
   return (
-    <div style={{ width: '100vw', height: '100vh' }}>
+    <div style={{ width: '100vw', height: '100vh', position: 'relative' }}>
+      <div style={{
+        position: 'absolute',
+        top: '20px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 1000,
+        display: 'flex',
+        gap: '10px',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        maxWidth: '90%'
+      }}>
+        {examples.map((example, index) => (
+          <button
+            key={example.id}
+            onClick={() => setCurrentExample(index)}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: currentExample === index ? '#4ecdc4' : '#2c3e50',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: currentExample === index ? 'bold' : 'normal',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            {example.name}
+          </button>
+        ))}
+      </div>
+
       <Canvas camera={{ position: [0, 0, 8] }}>
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} />
-        <RotatingCube />
-        <RotatingTorus />
-        <Stars />
-        <OrbitControls />
+        <CurrentComponent />
       </Canvas>
     </div>
   )
